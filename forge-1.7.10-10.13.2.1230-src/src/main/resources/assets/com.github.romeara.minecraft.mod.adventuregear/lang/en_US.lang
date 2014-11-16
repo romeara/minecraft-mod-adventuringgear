@@ -1,0 +1,5 @@
+#tile.yourBlock.name=Whatever You Want To Name Your Block (this is for blocks)
+#item.yourItem.name=Whatever You Want To Name Your Item (this is for items)
+#itemGroup.tabName=Whatever You Want To Name Your Creative Tab (this is for Creative Tabs)
+
+item.clipboard.name=Clipboard

@@ -1,0 +1,16 @@
+[
+{
+  "modid": "com.github.romeara.minecraft.mod.adventuregear",
+  "name": "Adventuring Gear Mod",
+  "description": "Mod that adds several tools to help Steves with a love for exploration",
+  "version": "${version}",
+  "mcversion": "${mcversion}",
+  "url": "",
+  "updateUrl": "",
+  "authorList": ["romeara"],
+  "credits": "The Forge and FML guys, for providing a base to build this off of",
+  "logoFile": "",
+  "screenshots": [],
+  "dependencies": []
+}
+]
