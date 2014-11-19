@@ -7,7 +7,11 @@ import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 
 import com.github.romeara.minecraft.mod.adventuregear.gui.GuiHandler;
+import com.github.romeara.minecraft.mod.adventuregear.item.ItemCampingFurnace;
 import com.github.romeara.minecraft.mod.adventuregear.item.ItemClipboard;
+import com.github.romeara.minecraft.mod.adventuregear.item.process.CachingProcessProvider;
+import com.github.romeara.minecraft.mod.adventuregear.item.process.IFurnaceProcess;
+import com.github.romeara.minecraft.mod.adventuregear.item.process.IProcessProvider;
 import com.github.romeara.minecraft.mod.adventuregear.util.ShapedCraftingRecipe;
 
 import cpw.mods.fml.common.Mod;
@@ -46,7 +50,15 @@ public class AdventuringGearMod {
     public static final String VERSION = "0.1";
 
     /** Map relating an item name to an associated GUI identifier within the mod instance */
-    private Map<String, Integer> guiId = new HashMap<String, Integer>();
+    private Map<String, Integer> guiId = null;
+
+    // TODO doc
+    private IProcessProvider<IFurnaceProcess> furnaceProcessProvider;
+
+    public AdventuringGearMod() {
+        guiId = new HashMap<String, Integer>();
+        furnaceProcessProvider = new CachingProcessProvider<IFurnaceProcess>(100);
+    }
 
     /**
      * @return This mod instance in the running Minecraft application
@@ -55,11 +67,16 @@ public class AdventuringGearMod {
         return instance;
     }
 
+    public IProcessProvider<IFurnaceProcess> getFurnaceProcessProvider() {
+        return furnaceProcessProvider;
+    }
+
     @EventHandler
     public void preInit(FMLPreInitializationEvent e) {
         GuiHandler guiHandler = new GuiHandler();
 
         registerItem(new ItemClipboard(), guiHandler);
+        registerItem(new ItemCampingFurnace(), guiHandler);
 
         // Register the GUI handler
         NetworkRegistry.INSTANCE.registerGuiHandler(this, guiHandler);
