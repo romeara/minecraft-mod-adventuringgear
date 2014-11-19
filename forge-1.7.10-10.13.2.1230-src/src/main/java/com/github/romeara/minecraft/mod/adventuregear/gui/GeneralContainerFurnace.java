@@ -31,9 +31,12 @@ public class GeneralContainerFurnace extends Container {
 
     private static final String __OBFID = "CL_00001748";
 
-    public GeneralContainerFurnace(InventoryPlayer playerInventory, UUID furnaceProcessId) {
+    private boolean remote;
+
+    public GeneralContainerFurnace(InventoryPlayer playerInventory, UUID furnaceProcessId, boolean remote) {
         this.furnaceProcessId = furnaceProcessId;
-        IFurnaceProcess furnaceProcess = AdventuringGearMod.getInstance().getFurnaceProcessProvider().getProcess(furnaceProcessId);
+        this.remote = remote;
+        IFurnaceProcess furnaceProcess = AdventuringGearMod.getInstance().getFurnaceProcessProvider().getProcess(remote, furnaceProcessId);
 
         this.addSlotToContainer(new Slot(furnaceProcess, 0, 56, 17));
         this.addSlotToContainer(new Slot(furnaceProcess, 1, 56, 53));
@@ -52,7 +55,7 @@ public class GeneralContainerFurnace extends Container {
 
     @Override
     public void addCraftingToCrafters(ICrafting crafting) {
-        IFurnaceProcess furnaceProcess = AdventuringGearMod.getInstance().getFurnaceProcessProvider().getProcess(furnaceProcessId);
+        IFurnaceProcess furnaceProcess = AdventuringGearMod.getInstance().getFurnaceProcessProvider().getProcess(remote, furnaceProcessId);
 
         super.addCraftingToCrafters(crafting);
         crafting.sendProgressBarUpdate(this, 0, furnaceProcess.hasCookedForTicks());
@@ -65,7 +68,7 @@ public class GeneralContainerFurnace extends Container {
      */
     @Override
     public void detectAndSendChanges() {
-        IFurnaceProcess furnaceProcess = AdventuringGearMod.getInstance().getFurnaceProcessProvider().getProcess(furnaceProcessId);
+        IFurnaceProcess furnaceProcess = AdventuringGearMod.getInstance().getFurnaceProcessProvider().getProcess(remote, furnaceProcessId);
 
         super.detectAndSendChanges();
 
@@ -93,7 +96,7 @@ public class GeneralContainerFurnace extends Container {
     @Override
     @SideOnly(Side.CLIENT)
     public void updateProgressBar(int progressBarIndex, int ticks) {
-        IFurnaceProcess furnaceProcess = AdventuringGearMod.getInstance().getFurnaceProcessProvider().getProcess(furnaceProcessId);
+        IFurnaceProcess furnaceProcess = AdventuringGearMod.getInstance().getFurnaceProcessProvider().getProcess(remote, furnaceProcessId);
 
         if (progressBarIndex == 0) {
             furnaceProcess.setHasCookedForTicks(ticks);
@@ -110,7 +113,7 @@ public class GeneralContainerFurnace extends Container {
 
     @Override
     public boolean canInteractWith(EntityPlayer player) {
-        IFurnaceProcess furnaceProcess = AdventuringGearMod.getInstance().getFurnaceProcessProvider().getProcess(furnaceProcessId);
+        IFurnaceProcess furnaceProcess = AdventuringGearMod.getInstance().getFurnaceProcessProvider().getProcess(remote, furnaceProcessId);
 
         return furnaceProcess.isUseableByPlayer(player);
     }

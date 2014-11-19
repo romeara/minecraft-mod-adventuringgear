@@ -20,9 +20,12 @@ public class GeneralGuiFurnace extends GuiContainer {
 
     private UUID processId;
 
-    public GeneralGuiFurnace(InventoryPlayer p_i1091_1_, UUID processId) {
-        super(new GeneralContainerFurnace(p_i1091_1_, processId));
+    private boolean remote;
+
+    public GeneralGuiFurnace(InventoryPlayer p_i1091_1_, UUID processId, boolean remote) {
+        super(new GeneralContainerFurnace(p_i1091_1_, processId, remote));
         this.processId = processId;
+        this.remote = remote;
     }
 
     /**
@@ -30,7 +33,7 @@ public class GeneralGuiFurnace extends GuiContainer {
      */
     @Override
     protected void drawGuiContainerForegroundLayer(int p_146979_1_, int p_146979_2_) {
-        IFurnaceProcess tileFurnace = AdventuringGearMod.getInstance().getFurnaceProcessProvider().getProcess(processId);
+        IFurnaceProcess tileFurnace = AdventuringGearMod.getInstance().getFurnaceProcessProvider().getProcess(remote, processId);
         String s = tileFurnace.hasCustomInventoryName() ? tileFurnace.getInventoryName() : I18n.format(tileFurnace.getInventoryName(),
                 new Object[0]);
         this.fontRendererObj.drawString(s, this.xSize / 2 - this.fontRendererObj.getStringWidth(s) / 2, 6, 4210752);
@@ -45,7 +48,7 @@ public class GeneralGuiFurnace extends GuiContainer {
         int l = (this.height - this.ySize) / 2;
         this.drawTexturedModalRect(k, l, 0, 0, this.xSize, this.ySize);
 
-        IFurnaceProcess tileFurnace = AdventuringGearMod.getInstance().getFurnaceProcessProvider().getProcess(processId);
+        IFurnaceProcess tileFurnace = AdventuringGearMod.getInstance().getFurnaceProcessProvider().getProcess(remote, processId);
 
         if (tileFurnace.isBurning()) {
             int i1 = tileFurnace.getBurnTimeRemainingScaled(13);

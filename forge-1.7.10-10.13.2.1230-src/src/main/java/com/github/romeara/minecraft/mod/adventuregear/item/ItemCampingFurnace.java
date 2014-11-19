@@ -44,51 +44,50 @@ public class ItemCampingFurnace extends Item implements ICraftableWorldEntity, I
     @Override
     public ItemStack onItemRightClick(ItemStack heldStack, World world,
             EntityPlayer player) {
-        if (heldStack.getTagCompound() == null) {
-            heldStack.setTagCompound(new NBTTagCompound());
+        if (!world.isRemote) {
+            if (heldStack.getTagCompound() == null) {
+                heldStack.setTagCompound(new NBTTagCompound());
+            }
+
+            UUID processId = PortableEntityFurnace.getId(heldStack.getTagCompound());
+
+            AdventuringGearMod instance = AdventuringGearMod.getInstance();
+            activeFurnaces.put(player.getDisplayName(), processId);
+
+            player.openGui(instance, instance.getGuiId(this), world, (int) player.posX, (int) player.posY, (int) player.posZ);
         }
-
-        UUID processId = PortableEntityFurnace.getId(heldStack.getTagCompound());
-
-        AdventuringGearMod instance = AdventuringGearMod.getInstance();
-        activeFurnaces.put(player.getDisplayName(), processId);
-
-        player.openGui(instance, instance.getGuiId(this), world, (int) player.posX, (int) player.posY, (int) player.posZ);
 
         return heldStack;
     }
 
     @Override
     public void onUpdate(ItemStack itemStack, World world, Entity holdingEntity, int inventorySlotIndex, boolean isHeldItem) {
-        // Should only be done by server
-        if (world.isRemote) {
-            UUID id = PortableEntityFurnace.getId(itemStack.getTagCompound());
+        UUID id = PortableEntityFurnace.getId(itemStack.getTagCompound());
 
-            IFurnaceProcess process = null;
+        IFurnaceProcess process = null;
 
-            if (id != null) {
-                process = AdventuringGearMod.getInstance().getFurnaceProcessProvider().getProcess(id);
+        if (id != null) {
+            process = AdventuringGearMod.getInstance().getFurnaceProcessProvider().getProcess(world.isRemote, id);
 
-                if (process == null && itemStack.getTagCompound() != null) {
-                    process = new PortableEntityFurnace(itemStack.getTagCompound());
-                }
+            if (process == null && itemStack.getTagCompound() != null) {
+                process = new PortableEntityFurnace(itemStack.getTagCompound());
             }
-
-            if (process == null) {
-                process = new PortableEntityFurnace();
-            }
-
-            process.runTick();
-
-            // Write to cache and item
-            AdventuringGearMod.getInstance().getFurnaceProcessProvider().updateProcess(process);
-
-            if (itemStack.getTagCompound() == null) {
-                itemStack.setTagCompound(new NBTTagCompound());
-            }
-
-            process.writeToNBT(itemStack.getTagCompound());
         }
+
+        if (process == null) {
+            process = new PortableEntityFurnace();
+        }
+
+        process.runTick();
+
+        // Write to cache and item
+        AdventuringGearMod.getInstance().getFurnaceProcessProvider().updateProcess(world.isRemote, process);
+
+        if (itemStack.getTagCompound() == null) {
+            itemStack.setTagCompound(new NBTTagCompound());
+        }
+
+        process.writeToNBT(itemStack.getTagCompound());
 
         super.onUpdate(itemStack, world, holdingEntity, inventorySlotIndex, isHeldItem);
     }
@@ -115,7 +114,7 @@ public class ItemCampingFurnace extends Item implements ICraftableWorldEntity, I
         UUID stack = activeFurnaces.get(player.getDisplayName());
 
         if (stack != null) {
-            Container container = new GeneralContainerFurnace(player.inventory, stack);
+            Container container = new GeneralContainerFurnace(player.inventory, stack, world.isRemote);
             return container;
         }
 
@@ -127,7 +126,7 @@ public class ItemCampingFurnace extends Item implements ICraftableWorldEntity, I
         UUID stack = activeFurnaces.get(player.getDisplayName());
 
         if (stack != null) {
-            GuiContainer guiContainer = new GeneralGuiFurnace(player.inventory, stack);
+            GuiContainer guiContainer = new GeneralGuiFurnace(player.inventory, stack, world.isRemote);
             return guiContainer;
         }
 

@@ -181,6 +181,7 @@ public class PortableEntityFurnace implements IInventory, IFurnaceProcess {
             itemMetaData.setTag("Items", nbttaglist);
 
             itemMetaData.setString("furnaceDataId", id.toString());
+            dirty = false;
         }
     }
 
@@ -316,6 +317,7 @@ public class PortableEntityFurnace implements IInventory, IFurnaceProcess {
             if (this.furnaceItemStacks[0].stackSize <= 0) {
                 this.furnaceItemStacks[0] = null;
             }
+            markDirty();
         }
     }
 
