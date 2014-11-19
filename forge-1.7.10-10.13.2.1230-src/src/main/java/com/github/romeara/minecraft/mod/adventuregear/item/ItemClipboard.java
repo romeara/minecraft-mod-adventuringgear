@@ -43,6 +43,7 @@ public class ItemClipboard extends Item implements ICraftableWorldEntity, IGuiWo
         setUnlocalizedName(NAME);
         setTextureName(AdventuringGearMod.MODID + ":" + NAME);
         setCreativeTab(CreativeTabs.tabTools);
+        setMaxStackSize(1);
     }
 
     @Override
