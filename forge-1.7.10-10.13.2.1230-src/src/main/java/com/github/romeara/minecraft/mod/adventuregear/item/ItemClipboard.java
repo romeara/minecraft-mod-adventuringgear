@@ -49,8 +49,11 @@ public class ItemClipboard extends Item implements ICraftableWorldEntity, IGuiWo
     @Override
     public ItemStack onItemRightClick(ItemStack heldStack, World world,
             EntityPlayer player) {
-        AdventuringGearMod instance = AdventuringGearMod.getInstance();
-        player.openGui(instance, instance.getGuiId(this), world, (int) player.posX, (int) player.posY, (int) player.posZ);
+        // Remote will automatically be dealt with automatically by the system and the open GUI call
+        if (!world.isRemote) {
+            AdventuringGearMod instance = AdventuringGearMod.getInstance();
+            player.openGui(instance, instance.getGuiId(this), world, (int) player.posX, (int) player.posY, (int) player.posZ);
+        }
 
         return heldStack;
     }
