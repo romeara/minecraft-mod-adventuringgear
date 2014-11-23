@@ -19,9 +19,9 @@ import net.minecraft.world.World;
 import com.github.romeara.minecraft.mod.adventuregear.AdventuringGearMod;
 import com.github.romeara.minecraft.mod.adventuregear.ICraftableWorldEntity;
 import com.github.romeara.minecraft.mod.adventuregear.IGuiWorldEntity;
+import com.github.romeara.minecraft.mod.adventuregear.data.IFurnaceProcess;
 import com.github.romeara.minecraft.mod.adventuregear.gui.GeneralContainerFurnace;
 import com.github.romeara.minecraft.mod.adventuregear.gui.GeneralGuiFurnace;
-import com.github.romeara.minecraft.mod.adventuregear.item.process.IFurnaceProcess;
 import com.github.romeara.minecraft.mod.adventuregear.tileentity.PortableEntityFurnace;
 import com.github.romeara.minecraft.mod.adventuregear.util.ShapedCraftingRecipe;
 
@@ -67,7 +67,7 @@ public class ItemCampingFurnace extends Item implements ICraftableWorldEntity, I
         IFurnaceProcess process = null;
 
         if (id != null) {
-            process = AdventuringGearMod.getInstance().getFurnaceProcessProvider().getProcess(world.isRemote, id);
+            process = AdventuringGearMod.getInstance().furnaceData().get(id);
 
             if (process == null && itemStack.getTagCompound() != null) {
                 process = new PortableEntityFurnace(itemStack.getTagCompound());
@@ -81,13 +81,21 @@ public class ItemCampingFurnace extends Item implements ICraftableWorldEntity, I
         process.runTick();
 
         // Write to cache and item
-        AdventuringGearMod.getInstance().getFurnaceProcessProvider().updateProcess(world.isRemote, process);
+        AdventuringGearMod.getInstance().furnaceData().update(process);
 
         if (itemStack.getTagCompound() == null) {
             itemStack.setTagCompound(new NBTTagCompound());
         }
 
         process.writeToNBT(itemStack.getTagCompound());
+
+        // Only update on server side (isRemote = isClient)
+        if (!world.isRemote) {
+            if (holdingEntity instanceof EntityPlayer) {
+                EntityPlayer player = (EntityPlayer) holdingEntity;
+                // TODO lit/unlit player.inventory.setInventorySlotContents(inventorySlotIndex, itemStack);
+            }
+        }
 
         super.onUpdate(itemStack, world, holdingEntity, inventorySlotIndex, isHeldItem);
     }
@@ -114,7 +122,7 @@ public class ItemCampingFurnace extends Item implements ICraftableWorldEntity, I
         UUID stack = activeFurnaces.get(player.getDisplayName());
 
         if (stack != null) {
-            Container container = new GeneralContainerFurnace(player.inventory, stack, world.isRemote);
+            Container container = new GeneralContainerFurnace(player.inventory, stack);
             return container;
         }
 
@@ -126,7 +134,7 @@ public class ItemCampingFurnace extends Item implements ICraftableWorldEntity, I
         UUID stack = activeFurnaces.get(player.getDisplayName());
 
         if (stack != null) {
-            GuiContainer guiContainer = new GeneralGuiFurnace(player.inventory, stack, world.isRemote);
+            GuiContainer guiContainer = new GeneralGuiFurnace(player.inventory, stack);
             return guiContainer;
         }
 

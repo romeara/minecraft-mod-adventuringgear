@@ -10,7 +10,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.tileentity.TileEntityFurnace;
 
-import com.github.romeara.minecraft.mod.adventuregear.item.process.IFurnaceProcess;
+import com.github.romeara.minecraft.mod.adventuregear.data.IFurnaceProcess;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;

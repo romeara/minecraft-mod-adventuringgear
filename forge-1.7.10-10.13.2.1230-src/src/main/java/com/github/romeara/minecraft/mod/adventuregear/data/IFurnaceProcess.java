@@ -1,10 +1,10 @@
-package com.github.romeara.minecraft.mod.adventuregear.item.process;
+package com.github.romeara.minecraft.mod.adventuregear.data;
 
 import net.minecraft.inventory.IInventory;
 import net.minecraft.nbt.NBTTagCompound;
 
 // TODO doc
-public interface IFurnaceProcess extends IInventory, IItemProcess {
+public interface IFurnaceProcess extends IInventory, IPersitentData {
 
     void readFromNBT(NBTTagCompound p_145839_1_);
 

@@ -6,12 +6,12 @@ import java.util.Map;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 
+import com.github.romeara.minecraft.mod.adventuregear.data.CachingDataProvider;
+import com.github.romeara.minecraft.mod.adventuregear.data.IDataProvider;
+import com.github.romeara.minecraft.mod.adventuregear.data.IFurnaceProcess;
 import com.github.romeara.minecraft.mod.adventuregear.gui.GuiHandler;
 import com.github.romeara.minecraft.mod.adventuregear.item.ItemCampingFurnace;
 import com.github.romeara.minecraft.mod.adventuregear.item.ItemClipboard;
-import com.github.romeara.minecraft.mod.adventuregear.item.process.CachingProcessProvider;
-import com.github.romeara.minecraft.mod.adventuregear.item.process.IFurnaceProcess;
-import com.github.romeara.minecraft.mod.adventuregear.item.process.IProcessProvider;
 import com.github.romeara.minecraft.mod.adventuregear.util.ShapedCraftingRecipe;
 
 import cpw.mods.fml.common.Mod;
@@ -53,11 +53,11 @@ public class AdventuringGearMod {
     private Map<String, Integer> guiId = null;
 
     // TODO doc
-    private IProcessProvider<IFurnaceProcess> furnaceProcessProvider;
+    private IDataProvider<IFurnaceProcess> furnaceProcessProvider;
 
     public AdventuringGearMod() {
         guiId = new HashMap<String, Integer>();
-        furnaceProcessProvider = new CachingProcessProvider<IFurnaceProcess>(100);
+        furnaceProcessProvider = new CachingDataProvider<IFurnaceProcess>(100);
     }
 
     /**
@@ -67,7 +67,7 @@ public class AdventuringGearMod {
         return instance;
     }
 
-    public IProcessProvider<IFurnaceProcess> getFurnaceProcessProvider() {
+    public IDataProvider<IFurnaceProcess> furnaceData() {
         return furnaceProcessProvider;
     }
 
