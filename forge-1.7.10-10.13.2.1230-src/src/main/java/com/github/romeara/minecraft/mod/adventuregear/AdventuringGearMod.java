@@ -6,6 +6,7 @@ import java.util.Map;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 
+import com.github.romeara.minecraft.mod.adventuregear.block.BlockClipboard;
 import com.github.romeara.minecraft.mod.adventuregear.gui.GuiHandler;
 import com.github.romeara.minecraft.mod.adventuregear.item.ItemClipboard;
 import com.github.romeara.minecraft.mod.adventuregear.util.ShapedCraftingRecipe;
@@ -60,6 +61,7 @@ public class AdventuringGearMod {
         GuiHandler guiHandler = new GuiHandler();
 
         registerItem(new ItemClipboard(), guiHandler);
+        registerBlock(new BlockClipboard(), guiHandler);
 
         // Register the GUI handler
         NetworkRegistry.INSTANCE.registerGuiHandler(this, guiHandler);
