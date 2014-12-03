@@ -29,7 +29,9 @@ public class BlockClipboard extends Block implements IModWorldEntity, IGuiWorldE
 
     public static final String NAME = "block_clipboard";
 
-    private IIcon icon = null;
+    private IIcon frontIcon = null;
+
+    private IIcon sideIcon = null;
 
     public BlockClipboard() {
         super(Material.wood);
@@ -47,7 +49,13 @@ public class BlockClipboard extends Block implements IModWorldEntity, IGuiWorldE
     @Override
     @SideOnly(Side.CLIENT)
     public IIcon getIcon(int side, int metaData) {
-        return icon;
+        if (side == metaData) {
+            // Looking as "front"
+            return frontIcon;
+        }
+
+        // Looking at a side
+        return sideIcon;
     }
 
     /**
@@ -210,7 +218,8 @@ public class BlockClipboard extends Block implements IModWorldEntity, IGuiWorldE
     @Override
     @SideOnly(Side.CLIENT)
     public void registerBlockIcons(IIconRegister iconRegister) {
-        icon = iconRegister.registerIcon(AdventuringGearMod.MODID + ":" + this.getTextureName());
+        frontIcon = iconRegister.registerIcon(AdventuringGearMod.MODID + ":" + this.getTextureName() + "_front");
+        sideIcon = iconRegister.registerIcon(AdventuringGearMod.MODID + ":" + this.getTextureName() + "_side");
     }
 
     @Override
