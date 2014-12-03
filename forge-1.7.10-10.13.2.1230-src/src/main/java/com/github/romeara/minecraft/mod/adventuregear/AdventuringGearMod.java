@@ -9,7 +9,10 @@ import net.minecraft.item.Item;
 import com.github.romeara.minecraft.mod.adventuregear.block.BlockClipboard;
 import com.github.romeara.minecraft.mod.adventuregear.gui.GuiHandler;
 import com.github.romeara.minecraft.mod.adventuregear.item.ItemClipboard;
-import com.github.romeara.minecraft.mod.adventuregear.util.ShapedCraftingRecipe;
+import com.github.romeara.minecraft.mod.common.ShapedCraftingRecipe;
+import com.github.romeara.minecraft.mod.common.entity.ICraftableWorldEntity;
+import com.github.romeara.minecraft.mod.common.entity.IGuiWorldEntity;
+import com.github.romeara.minecraft.mod.common.entity.IModWorldEntity;
 
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;

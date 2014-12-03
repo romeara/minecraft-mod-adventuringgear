@@ -1,4 +1,4 @@
-package com.github.romeara.minecraft.mod.adventuregear;
+package com.github.romeara.minecraft.mod.common.entity;
 
 /**
  * Represents an item/block contributed to Minecraft by a mod.

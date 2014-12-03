@@ -1,6 +1,6 @@
-package com.github.romeara.minecraft.mod.adventuregear;
+package com.github.romeara.minecraft.mod.common.entity;
 
-import com.github.romeara.minecraft.mod.adventuregear.util.ShapedCraftingRecipe;
+import com.github.romeara.minecraft.mod.common.ShapedCraftingRecipe;
 
 /**
  * Represents an item/block which may be crafted by the player

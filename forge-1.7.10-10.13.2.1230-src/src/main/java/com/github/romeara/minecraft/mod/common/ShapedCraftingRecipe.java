@@ -1,4 +1,4 @@
-package com.github.romeara.minecraft.mod.adventuregear.util;
+package com.github.romeara.minecraft.mod.common;
 
 import java.util.ArrayList;
 import java.util.HashMap;

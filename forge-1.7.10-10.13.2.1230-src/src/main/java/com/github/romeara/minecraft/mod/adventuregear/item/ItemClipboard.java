@@ -1,5 +1,6 @@
 package com.github.romeara.minecraft.mod.adventuregear.item;
 
+import net.minecraft.block.Block;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
@@ -11,12 +12,13 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 
 import com.github.romeara.minecraft.mod.adventuregear.AdventuringGearMod;
-import com.github.romeara.minecraft.mod.adventuregear.ICraftableWorldEntity;
-import com.github.romeara.minecraft.mod.adventuregear.IGuiWorldEntity;
 import com.github.romeara.minecraft.mod.adventuregear.block.BlockClipboard;
 import com.github.romeara.minecraft.mod.adventuregear.gui.PortableContainerWorkbench;
 import com.github.romeara.minecraft.mod.adventuregear.gui.PortableGuiCrafting;
-import com.github.romeara.minecraft.mod.adventuregear.util.ShapedCraftingRecipe;
+import com.github.romeara.minecraft.mod.common.ShapedCraftingRecipe;
+import com.github.romeara.minecraft.mod.common.entity.Entities;
+import com.github.romeara.minecraft.mod.common.entity.ICraftableWorldEntity;
+import com.github.romeara.minecraft.mod.common.entity.IGuiWorldEntity;
 
 import cpw.mods.fml.common.registry.GameRegistry;
 
@@ -65,15 +67,16 @@ public class ItemClipboard extends Item implements ICraftableWorldEntity, IGuiWo
             int x, int y, int z, int side, float hitX, float hitY, float hitZ) {
         // Place a block in the world if right-clicking
         if (player.isSneaking()) {
-            boolean placed = PluginItems.placeBlockOnSideIfValid(GameRegistry.findBlock(AdventuringGearMod.MODID, BlockClipboard.NAME), held, player, world, x,
-                    y, z, side);
+            boolean used = false;
 
-            if (!placed) {
-                placed = PluginItems.placeBlockOnTopIfValid(GameRegistry.findBlock(AdventuringGearMod.MODID, BlockClipboard.NAME), held, player, world, x, y,
-                        z, side);
+            Block clipboardBlock = BlockClipboard.getInstance();
+
+            if (clipboardBlock != null && Entities.place(world, x, y, z, side, clipboardBlock, player, held)) {
+                held.stackSize = held.stackSize - 1;
+                used = true;
             }
 
-            return placed;
+            return used;
         }
 
         return super.onItemUse(held, player, world, x, y, z, side, hitX, hitY, hitZ);
@@ -105,6 +108,10 @@ public class ItemClipboard extends Item implements ICraftableWorldEntity, IGuiWo
                 .btmLeft(Items.stick).btmMid(Blocks.crafting_table).btmRight(Items.stick);
 
         return new ShapedCraftingRecipe[] { recipe };
+    }
+
+    public static Item getInstance() {
+        return GameRegistry.findItem(AdventuringGearMod.MODID, NAME);
     }
 
 }

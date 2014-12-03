@@ -1,4 +1,4 @@
-package com.github.romeara.minecraft.mod.adventuregear;
+package com.github.romeara.minecraft.mod.common.entity;
 
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.entity.player.EntityPlayer;

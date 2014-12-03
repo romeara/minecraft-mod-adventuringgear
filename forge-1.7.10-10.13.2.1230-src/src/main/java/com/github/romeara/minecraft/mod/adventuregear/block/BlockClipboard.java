@@ -15,11 +15,12 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
 import com.github.romeara.minecraft.mod.adventuregear.AdventuringGearMod;
-import com.github.romeara.minecraft.mod.adventuregear.IGuiWorldEntity;
-import com.github.romeara.minecraft.mod.adventuregear.IModWorldEntity;
 import com.github.romeara.minecraft.mod.adventuregear.gui.PortableContainerWorkbench;
 import com.github.romeara.minecraft.mod.adventuregear.gui.PortableGuiCrafting;
 import com.github.romeara.minecraft.mod.adventuregear.item.ItemClipboard;
+import com.github.romeara.minecraft.mod.common.entity.Entities;
+import com.github.romeara.minecraft.mod.common.entity.IGuiWorldEntity;
+import com.github.romeara.minecraft.mod.common.entity.IModWorldEntity;
 
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.Side;
@@ -79,59 +80,10 @@ public class BlockClipboard extends Block implements IModWorldEntity, IGuiWorldE
         float heightMax = 0.875F;
         float depth = 0.0675F;
 
-        float minX = 0.0F;
-        float maxX = 1.0F;
-        float minY = 0.0F;
-        float maxY = 1.0F;
-        float minZ = 0.0F;
-        float maxZ = 1.0F;
+        com.github.romeara.minecraft.mod.common.Side sideRep =
+                com.github.romeara.minecraft.mod.common.Side.getByMinecraftIndex(blockMeta, null);
 
-        if (blockMeta == 1) {
-            minX = widthMin;
-            minY = 0.0F;
-            minZ = heightMin;
-            maxX = widthMax;
-            maxY = depth;
-            maxZ = heightMax;
-        }
-
-        if (blockMeta == 2) {
-            minX = widthMin;
-            minY = heightMin;
-            minZ = 1.0F - depth;
-            maxX = widthMax;
-            maxY = heightMax;
-            maxZ = 1.0F;
-        }
-
-        if (blockMeta == 3) {
-            minX = widthMin;
-            minY = heightMin;
-            minZ = 0.0F;
-            maxX = widthMax;
-            maxY = heightMax;
-            maxZ = depth;
-        }
-
-        if (blockMeta == 4) {
-            minX = 1.0F - depth;
-            minY = heightMin;
-            minZ = widthMin;
-            maxX = 1.0F;
-            maxY = heightMax;
-            maxZ = widthMax;
-        }
-
-        if (blockMeta == 5) {
-            minX = 0.0F;
-            minY = heightMin;
-            minZ = widthMin;
-            maxX = depth;
-            maxY = heightMax;
-            maxZ = widthMax;
-        }
-
-        this.setBlockBounds(minX, minY, minZ, maxX, maxY, maxZ);
+        Entities.setBlockRenderBounds(this, sideRep, heightMin, heightMax, widthMin, widthMax, depth);
     }
 
     /**
@@ -248,6 +200,11 @@ public class BlockClipboard extends Block implements IModWorldEntity, IGuiWorldE
     public GuiContainer getClientGui(EntityPlayer player, World world, int x, int y, int z) {
         GuiContainer guiContainer = new PortableGuiCrafting(player.inventory, world, x, y, z);
         return guiContainer;
+    }
+
+    // TODO
+    public static Block getInstance() {
+        return GameRegistry.findBlock(AdventuringGearMod.MODID, NAME);
     }
 
 }

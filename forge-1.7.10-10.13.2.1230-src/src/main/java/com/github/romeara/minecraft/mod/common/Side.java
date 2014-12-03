@@ -1,4 +1,4 @@
-package com.github.romeara.minecraft.mod.adventuregear.util;
+package com.github.romeara.minecraft.mod.common;
 
 import java.util.Map;
 
@@ -29,6 +29,10 @@ public enum Side {
 
     private Side(int minecraftIndex) {
         this.minecraftIndex = minecraftIndex;
+    }
+
+    public int minecraftIndex() {
+        return minecraftIndex;
     }
 
     public static Side getByMinecraftIndex(int minecraftIndex, Side defaultSide) {

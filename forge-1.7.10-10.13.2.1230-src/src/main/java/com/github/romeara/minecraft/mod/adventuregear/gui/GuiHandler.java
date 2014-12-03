@@ -6,7 +6,7 @@ import java.util.Map;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
 
-import com.github.romeara.minecraft.mod.adventuregear.IGuiWorldEntity;
+import com.github.romeara.minecraft.mod.common.entity.IGuiWorldEntity;
 
 import cpw.mods.fml.common.network.IGuiHandler;
 
