@@ -13,9 +13,12 @@ import net.minecraft.world.World;
 import com.github.romeara.minecraft.mod.adventuregear.AdventuringGearMod;
 import com.github.romeara.minecraft.mod.adventuregear.ICraftableWorldEntity;
 import com.github.romeara.minecraft.mod.adventuregear.IGuiWorldEntity;
+import com.github.romeara.minecraft.mod.adventuregear.block.BlockClipboard;
 import com.github.romeara.minecraft.mod.adventuregear.gui.PortableContainerWorkbench;
 import com.github.romeara.minecraft.mod.adventuregear.gui.PortableGuiCrafting;
 import com.github.romeara.minecraft.mod.adventuregear.util.ShapedCraftingRecipe;
+
+import cpw.mods.fml.common.registry.GameRegistry;
 
 /**
  * Definition for a player-usable item called a "clipboard"
@@ -32,7 +35,7 @@ import com.github.romeara.minecraft.mod.adventuregear.util.ShapedCraftingRecipe;
 public class ItemClipboard extends Item implements ICraftableWorldEntity, IGuiWorldEntity {
 
     /** Mod-unique identifier for the clipboard */
-    private static final String NAME = "clipboard";
+    public static final String NAME = "clipboard";
 
     /**
      * Creates an item clipboard instance, setting its creative tab, standard name, and texture
@@ -47,15 +50,33 @@ public class ItemClipboard extends Item implements ICraftableWorldEntity, IGuiWo
     }
 
     @Override
-    public ItemStack onItemRightClick(ItemStack heldStack, World world,
-            EntityPlayer player) {
+    public ItemStack onItemRightClick(ItemStack heldStack, World world, EntityPlayer player) {
         // Remote will automatically be dealt with automatically by the system and the open GUI call
-        if (!world.isRemote) {
+        if (!world.isRemote && !player.isSneaking()) {
             AdventuringGearMod instance = AdventuringGearMod.getInstance();
             player.openGui(instance, instance.getGuiId(this), world, (int) player.posX, (int) player.posY, (int) player.posZ);
         }
 
         return heldStack;
+    }
+
+    @Override
+    public boolean onItemUse(ItemStack held, EntityPlayer player, World world,
+            int x, int y, int z, int side, float hitX, float hitY, float hitZ) {
+        // Place a block in the world if right-clicking
+        if (player.isSneaking()) {
+            boolean placed = PluginItems.placeBlockOnSideIfValid(GameRegistry.findBlock(AdventuringGearMod.MODID, BlockClipboard.NAME), held, player, world, x,
+                    y, z, side);
+
+            if (!placed) {
+                placed = PluginItems.placeBlockOnTopIfValid(GameRegistry.findBlock(AdventuringGearMod.MODID, BlockClipboard.NAME), held, player, world, x, y,
+                        z, side);
+            }
+
+            return placed;
+        }
+
+        return super.onItemUse(held, player, world, x, y, z, side, hitX, hitY, hitZ);
     }
 
     @Override
