@@ -26,14 +26,37 @@ import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
+/**
+ * Definition for a player-usable block corresponding to the "clipboard" item
+ * 
+ * <p>
+ * The clipboard is a tool which, when held in the player's hand and "used" (default is right-click), opens a workbench
+ * crafting interface. This tool is a relatively low-cost item, as it does not provide anything which significantly
+ * increases the player's power, just the convenience of performing a required operation (crafting) in the game. Its
+ * base resource cost ends up being exactly 2 logs
+ * </p>
+ * 
+ * <p>
+ * The block version allows the clipboard to double as an effective replacement for a standard workbench, removing the
+ * necessity of maintaining both
+ * </p>
+ * 
+ * @author romeara
+ */
 public class BlockClipboard extends Block implements IModWorldEntity, IGuiWorldEntity {
 
-    public static final String NAME = "block_clipboard";
+    /** Mod-unique identifier for the clipboard block */
+    private static final String NAME = "block_clipboard";
 
+    /** Description of the rendered texture for the front of the placed clipboard */
     private IIcon frontIcon = null;
 
+    /** Description of the rendered texture for all non-front sides of the clipboard */
     private IIcon sideIcon = null;
 
+    /**
+     * Creates a block clipboard instance, setting its name and rendering information
+     */
     public BlockClipboard() {
         super(Material.wood);
         disableStats();
@@ -114,14 +137,13 @@ public class BlockClipboard extends Block implements IModWorldEntity, IGuiWorldE
      * adjacent blocks and also whether the player can attach torches, redstone wire, etc to this block.
      */
     @Override
-    public boolean isOpaqueCube()
-    {
+    public boolean isOpaqueCube() {
         return false;
     }
 
     @Override
     public Item getItemDropped(int p_149650_1_, Random p_149650_2_, int p_149650_3_) {
-        return GameRegistry.findItem(AdventuringGearMod.MODID, ItemClipboard.NAME);
+        return ItemClipboard.getInstance();
     }
 
     /**
@@ -130,27 +152,12 @@ public class BlockClipboard extends Block implements IModWorldEntity, IGuiWorldE
      */
     @Override
     public void onNeighborBlockChange(World world, int x, int y, int z, Block block) {
-        boolean dropItem = true;
+        int sideInt = world.getBlockMetadata(x, y, z);
 
-        int l = world.getBlockMetadata(x, y, z);
+        com.github.romeara.minecraft.mod.common.Side side =
+                com.github.romeara.minecraft.mod.common.Side.getByMinecraftIndex(sideInt, null);
 
-        if (l == 2 && world.getBlock(x, y, z + 1).getMaterial().isSolid()) {
-            dropItem = false;
-        }
-
-        if (l == 3 && world.getBlock(x, y, z - 1).getMaterial().isSolid()) {
-            dropItem = false;
-        }
-
-        if (l == 4 && world.getBlock(x + 1, y, z).getMaterial().isSolid()) {
-            dropItem = false;
-        }
-
-        if (l == 5 && world.getBlock(x - 1, y, z).getMaterial().isSolid()) {
-            dropItem = false;
-        }
-
-        if (dropItem) {
+        if (!Entities.isAttachedBlockSolid(world, x, y, z, side)) {
             this.dropBlockAsItem(world, x, y, z, world.getBlockMetadata(x, y, z), 0);
             world.setBlockToAir(x, y, z);
         }
@@ -164,7 +171,7 @@ public class BlockClipboard extends Block implements IModWorldEntity, IGuiWorldE
     @Override
     @SideOnly(Side.CLIENT)
     public Item getItem(World p_149694_1_, int p_149694_2_, int p_149694_3_, int p_149694_4_) {
-        return GameRegistry.findItem(AdventuringGearMod.MODID, ItemClipboard.NAME);
+        return ItemClipboard.getInstance();
     }
 
     @Override
@@ -202,7 +209,9 @@ public class BlockClipboard extends Block implements IModWorldEntity, IGuiWorldE
         return guiContainer;
     }
 
-    // TODO
+    /**
+     * @return The registered instance of this block in the games
+     */
     public static Block getInstance() {
         return GameRegistry.findBlock(AdventuringGearMod.MODID, NAME);
     }

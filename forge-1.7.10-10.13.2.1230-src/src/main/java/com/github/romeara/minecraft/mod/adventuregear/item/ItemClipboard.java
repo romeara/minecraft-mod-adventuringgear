@@ -28,8 +28,8 @@ import cpw.mods.fml.common.registry.GameRegistry;
  * <p>
  * The clipboard is a tool which, when held in the player's hand and "used" (default is right-click), opens a workbench
  * crafting interface. This tool is a relatively low-cost item, as it does not provide anything which significantly
- * increases the player's power, just the convience of performing a required operation (crafting) in the game. Its base
- * resource cost ends up being exactly 2 logs
+ * increases the player's power, just the convenience of performing a required operation (crafting) in the game. Its
+ * base resource cost ends up being exactly 2 logs
  * </p>
  * 
  * @author romeara
@@ -37,7 +37,7 @@ import cpw.mods.fml.common.registry.GameRegistry;
 public class ItemClipboard extends Item implements ICraftableWorldEntity, IGuiWorldEntity {
 
     /** Mod-unique identifier for the clipboard */
-    public static final String NAME = "clipboard";
+    private static final String NAME = "clipboard";
 
     /**
      * Creates an item clipboard instance, setting its creative tab, standard name, and texture
@@ -110,6 +110,9 @@ public class ItemClipboard extends Item implements ICraftableWorldEntity, IGuiWo
         return new ShapedCraftingRecipe[] { recipe };
     }
 
+    /**
+     * @return The registered instance of this item in the games
+     */
     public static Item getInstance() {
         return GameRegistry.findItem(AdventuringGearMod.MODID, NAME);
     }

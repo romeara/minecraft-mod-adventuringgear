@@ -11,10 +11,14 @@ import net.minecraft.world.World;
 import com.github.romeara.minecraft.mod.common.Side;
 import com.google.common.collect.ImmutableSet;
 
-// TODO doc
-// TODO move to common "library" plugin
+/**
+ * Provides common operational functions related to blocks and items in the world
+ * 
+ * @author romeara
+ */
 public final class Entities {
 
+    /** Reference of blocks considered transparent for the purposes of placing other blocks */
     private static final Set<Block> TRANSPARENT_BLOCKS;
 
     static {
@@ -28,9 +32,27 @@ public final class Entities {
     }
 
     private Entities() {
+        // Prevent instantiation of utility class
     }
 
-    // TODO
+    /**
+     * Sets the rendering boundaries for a block based on the side it is placed on
+     * 
+     * @param block
+     *            The block being placed
+     * @param sideRep
+     *            The side being placed on
+     * @param heightMin
+     *            The lower bound for the height of the block [0.0F, 1.0F]
+     * @param heightMax
+     *            The upper bound for the height of the block [0.0F, 1.0F]
+     * @param widthMin
+     *            The lower bound for the width of the block [0.0F, 1.0F]
+     * @param widthMax
+     *            The upper bound for the width of the block [0.0F, 1.0F]
+     * @param depth
+     *            The depth of render block [0.0F, 1.0F]
+     */
     public static void setBlockRenderBounds(Block block, Side sideRep, float heightMin, float heightMax, float widthMin, float widthMax, float depth) {
         float minX = 0.0F;
         float maxX = 1.0F;
@@ -96,7 +118,81 @@ public final class Entities {
         block.setBlockBounds(minX, minY, minZ, maxX, maxY, maxZ);
     }
 
-    // TODO
+    /**
+     * Checks if the block attached to the provided side of a block is a solid block
+     * 
+     * @param world
+     *            The world to check within
+     * @param x
+     *            The x coordinate of the block
+     * @param y
+     *            The y coordinate of the block
+     * @param z
+     *            The z coordinate of the block
+     * @param side
+     *            The side to checked the attached block for
+     * @return True if the block attached to the side indicated is solid, false otherwise
+     */
+    public static boolean isAttachedBlockSolid(World world, int x, int y, int z, Side side) {
+        boolean solid = false;
+
+        int neighborX = x;
+        int neighborY = y;
+        int neighborZ = z;
+
+        if (Side.TOP.equals(side)) {
+            neighborY--;
+        }
+
+        if (Side.BOTTOM.equals(side)) {
+            neighborY++;
+        }
+
+        if (Side.NORTH.equals(side)) {
+            neighborZ++;
+        }
+
+        if (Side.SOUTH.equals(side)) {
+            neighborZ--;
+        }
+
+        if (Side.WEST.equals(side)) {
+            neighborX++;
+        }
+
+        if (Side.EAST.equals(side)) {
+            neighborX--;
+        }
+
+        return world.getBlock(neighborX, neighborY, neighborZ).getMaterial().isSolid();
+    }
+
+    /**
+     * Places a block in the world at the specified coordinates if the specified coordinates are a valid placement
+     * location
+     * 
+     * <p>
+     * Does not decrement the held stack size if the block is placed
+     * </p>
+     * 
+     * @param world
+     *            The world the block will be placed in
+     * @param x
+     *            The x coordinate to place on
+     * @param y
+     *            The y coordinate to place on
+     * @param z
+     *            The z coordinate to place on
+     * @param side
+     *            The side to place on
+     * @param blockToPlace
+     *            The block to place into the world
+     * @param player
+     *            The player placing the block
+     * @param held
+     *            The item stack currently held by the player
+     * @return True if the block was placed into the world, false otherwise
+     */
     public static boolean place(World world, int x, int y, int z, int side, Block blockToPlace, EntityPlayer player, ItemStack held) {
         Block block = world.getBlock(x, y, z);
 
@@ -106,7 +202,7 @@ public final class Entities {
             sideRep = Side.TOP;
         }
 
-        if (!world.getBlock(x, y, z).getMaterial().isSolid()) {
+        if (!block.getMaterial().isSolid()) {
             return false;
         } else {
             if (!TRANSPARENT_BLOCKS.contains(block) && !block.isReplaceable(world, x, y, z)) {
